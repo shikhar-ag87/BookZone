@@ -19,8 +19,8 @@ private:
 public:
     Bookshelf(int shelfId, const std::string& shelfName);
     ~Bookshelf();
-    void addBook(const std::string& title, const std::string& author, int id = -1);
-    void addBookWithGenres(const std::string& title, const std::string& author, const std::vector<std::string>& genres, int id = -1);
+    void addBook(const std::string& title, const std::string& author, int id = -1, bool silent = false);
+    void addBookWithGenres(const std::string& title, const std::string& author, const std::vector<std::string>& genres, int id = -1, bool silent = false);
     std::vector<Book*> getRecommendations(int bookId, int limit = 5);
     void displayBooks() const;
     void searchBook(int id) const;

@@ -45,6 +45,11 @@ void UserManager::loadFromFile() {
                     string shelf = entry.substr(0, colon);
                     int bookId = stoi(entry.substr(colon + 1));
                     u->borrowedBooks.emplace_back(shelf, bookId);
+                    // Increment borrow count in AVL tree for loaded borrowed books
+                    extern Library* gLibrary;
+                    if (gLibrary) {
+                        gLibrary->getMostBorrowedTree().increment(bookId);
+                    }
                 }
             }
         }
@@ -68,23 +73,23 @@ UserManager::~UserManager() {
 void UserManager::registerUser() {
     string username, password;
     int role;
-    cout << "\n=== Register User ===\n";
+    cout << "\n\033[1;36m=== Register User ===\033[0m\n";
     cout << "Enter username (or type 'cancel' to abort): ";
     cin >> username;
     if (username == "cancel" || username == "CANCEL" || username == "Cancel") {
-        cout << "Registration cancelled.\n";
+        cout << "\033[1;33mRegistration cancelled.\033[0m\n";
         return;
     }
 
     if (users.count(username)) {
-        cout << "❌ Username already exists.\n";
+        cout << "\033[1;31m✖ Username already exists.\033[0m\n";
         return;
     }
 
     cout << "Enter password (or type 'cancel' to abort): ";
     cin >> password;
     if (password == "cancel" || password == "CANCEL" || password == "Cancel") {
-        cout << "Registration cancelled.\n";
+        cout << "\033[1;33mRegistration cancelled.\033[0m\n";
         return;
     }
 
@@ -92,49 +97,49 @@ void UserManager::registerUser() {
     string roleInput;
     cin >> roleInput;
     if (roleInput == "cancel" || roleInput == "CANCEL" || roleInput == "Cancel") {
-        cout << "Registration cancelled.\n";
+        cout << "\033[1;33mRegistration cancelled.\033[0m\n";
         return;
     }
     try {
         role = stoi(roleInput);
     }
     catch (...) {
-        cout << "❗ Invalid choice.\n";
+        cout << "\033[1;31m❗ Invalid choice.\033[0m\n";
         return;
     }
 
     if (role != 0 && role != 1) {
-        cout << "❗ Invalid choice.\n";
+        cout << "\033[1;31m❗ Invalid choice.\033[0m\n";
         return;
     }
 
     users[username] = new User(username, password, role);
-    cout << "✅ User registered successfully.\n";
+    cout << "\033[1;32m✔ User registered successfully.\033[0m\n";
 }
 
 User* UserManager::loginUser() {
     string username, password;
-    cout << "\n=== Login ===\n";
+    cout << "\n\033[1;36m=== Login ===\033[0m\n";
     cout << "Enter username (or type 'cancel' to abort): ";
     cin >> username;
     if (username == "cancel" || username == "CANCEL" || username == "Cancel") {
-        cout << "Login cancelled.\n";
+        cout << "\033[1;33mLogin cancelled.\033[0m\n";
         return nullptr;
     }
     cout << "Enter password (or type 'cancel' to abort): ";
     cin >> password;
     if (password == "cancel" || password == "CANCEL" || password == "Cancel") {
-        cout << "Login cancelled.\n";
+        cout << "\033[1;33mLogin cancelled.\033[0m\n";
         return nullptr;
     }
 
     auto it = users.find(username);
     if (it != users.end() && it->second->password == password) {
-        cout << "✅ Login successful. Welcome, " << username << "!\n";
+        cout << "\033[1;32m✔ Login successful. Welcome, \033[1;36m" << username << "\033[1;32m!\033[0m\n";
         return it->second;
     }
     else {
-        cout << "❌ Invalid username or password.\n";
+        cout << "\033[1;31m✖ Invalid username or password.\033[0m\n";
         return nullptr;
     }
 }

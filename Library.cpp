@@ -49,8 +49,8 @@ void Library::loadFromFile() {
     while (getline(inFile, line)) {
         if (line.rfind("#Bookshelf,", 0) == 0) {
             string shelfName = line.substr(11);  // after "#Bookshelf,"
-            currentShelf = new Bookshelf(nextBookShelfId++, shelfName);
-            bookshelves[shelfName] = currentShelf;
+            addBookshelf(shelfName, true);
+            currentShelf = bookshelves[shelfName];
         }
         else if (currentShelf) {
             stringstream ss(line);
@@ -71,32 +71,34 @@ void Library::loadFromFile() {
             }
 
             int id = stoi(idStr);
-            currentShelf->addBookWithGenres(title, author, genres, id);
+            currentShelf->addBookWithGenres(title, author, genres, id, true);
         }
     }
 
     inFile.close();
 }
 
-void Library::addBookshelf(const string& name) {
+void Library::addBookshelf(const string& name, bool silent) {
     if (bookshelves.count(name)) {
-        cout << "⚠️  Bookshelf already exists.\n";
+        if (!silent)
+            cout << "\033[1;33m⚠️  Bookshelf already exists.\033[0m\n";
         return;
     }
     Bookshelf* bookShelf = new Bookshelf(nextBookShelfId++, name);
     bookshelves[name] = bookShelf;
-    cout << "✅ Bookshelf '" << name << "' added with id = " << bookShelf->getId() << ".\n";
+    if (!silent)
+        cout << "\033[1;32m✔ Bookshelf '\033[1;36m" << name << "\033[1;32m' added with id = " << bookShelf->getId() << ".\033[0m\n";
 }
 
 void Library::removeBookshelf(const string& name) {
     auto it = bookshelves.find(name);
     if (it == bookshelves.end()) {
-        cout << "❌ Bookshelf not found.\n";
+        cout << "\033[1;31m✖ Bookshelf not found.\033[0m\n";
         return;
     }
     delete it->second;
     bookshelves.erase(name);
-    cout << "✅ Bookshelf '" << name << "' Deleted.\n";
+    cout << "\033[1;31m✔ Bookshelf '\033[1;36m" << name << "\033[1;31m' Deleted.\033[0m\n";
 }
 
 Bookshelf* Library::getBookshelf(const string& name) {
@@ -106,12 +108,12 @@ Bookshelf* Library::getBookshelf(const string& name) {
 
 void Library::displayBookshelves() const {
     if (bookshelves.empty()) {
-        cout << "⚠️  No bookshelves available.\n";
+        cout << "\033[1;33m⚠️  No bookshelves available.\033[0m\n";
         return;
     }
-    cout << "\n📚 Available Bookshelves:\n";
+    cout << "\n\033[1;36m📚 Available Bookshelves:\033[0m\n";
     for (const auto& pair : bookshelves) {
-        cout << "🔹 " << pair.first << endl;
+        cout << "\033[1;34m🔹 " << pair.first << "\033[0m" << endl;
     }
 }
 
@@ -122,19 +124,19 @@ AVLTree& Library::getMostBorrowedTree() {
 void Library::displayTopBorrowedBooks(int N) {
     auto top = mostBorrowedTree.getTopN(N);
     if (top.empty()) {
-        std::cout << "⚠️  No books have been borrowed yet.\n";
+        std::cout << "\033[1;33m⚠️  No books have been borrowed yet.\033[0m\n";
         return;
     }
-    std::cout << "\n🔥 Top " << N << " Most Borrowed Books:\n";
+    std::cout << "\n\033[1;35m🔥 Top " << N << " Most Borrowed Books:\033[0m\n";
     for (const auto& pair : top) {
         // Find the book in any shelf
         for (const auto& shelfPair : bookshelves) {
             Book* b = shelfPair.second->getBookById(pair.first);
             if (b) {
-                std::cout << "🔸 ID: " << b->getId()
-                    << ", Title: " << b->getTitle()
-                    << ", Author: " << b->getAuthor()
-                    << ", Times Borrowed: " << pair.second << "\n";
+                std::cout << "\033[1;34m• ID: \033[1;37m" << b->getId()
+                    << "\033[0m, \033[1;34mTitle: \033[0m" << b->getTitle()
+                    << "\033[0m, \033[1;36mAuthor: \033[0m" << b->getAuthor()
+                    << "\033[0m, \033[1;31mTimes Borrowed: \033[1;37m" << pair.second << "\033[0m\n";
                 break;
             }
         }

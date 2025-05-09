@@ -19,17 +19,6 @@ int main() {
     do {
         bool isExit = promptUser(&library, &userManager, &currentUser);
         if (isExit) return 0;
-
-        // Add menu for top borrowed books
-        int showTop;
-        cout << "Show top N most borrowed books? (1 = Yes, 0 = No): ";
-        cin >> showTop;
-        if (showTop == 1) {
-            int N;
-            cout << "Enter N: ";
-            cin >> N;
-            library.displayTopBorrowedBooks(N);
-        }
     } while (!currentUser);
 
     library.saveToFile();

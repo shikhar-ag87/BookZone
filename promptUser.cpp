@@ -7,7 +7,7 @@ using namespace std;
 
 int promptUser(Library* library, UserManager* userManager, User** currentUser) {
     int authChoice;
-    cout << "\n=== Welcome ===\n";
+    cout << "\n\033[36m=== Welcome ===\033[0m\n";
     cout << "1. Register\n";
     cout << "2. Login\n";
     cout << "3. Exit\n";
@@ -23,11 +23,11 @@ int promptUser(Library* library, UserManager* userManager, User** currentUser) {
         break;
     case 3:
         // *currentUser = nullptr;
-        cout << "👋 Exiting program.\n";
+        cout << "\033[35m👋 Exiting program.\033[0m\n";
         return 1;
         break;
     default:
-        cout << "❗ Invalid choice.\n";
+        cout << "\033[31m❗ Invalid choice.\033[0m\n";
     }
 
 

@@ -18,12 +18,13 @@ public:
     ~Library();
     void saveToFile();
     void loadFromFile();
-    void addBookshelf(const std::string& name);
+    void addBookshelf(const std::string& name, bool silent = false);
     void removeBookshelf(const std::string& name);
     Bookshelf* getBookshelf(const std::string& name);
     void displayBookshelves() const;
     AVLTree& getMostBorrowedTree();
     void displayTopBorrowedBooks(int N);
+    const std::unordered_map<std::string, Bookshelf*>& getBookshelves() const { return bookshelves; }
 };
 
 #endif

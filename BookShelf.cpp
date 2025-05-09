@@ -19,7 +19,7 @@ Bookshelf::~Bookshelf() {
     }
 }
 
-void Bookshelf::addBook(const string& title, const string& author, int id) {
+void Bookshelf::addBook(const string& title, const string& author, int id, bool silent) {
     int assignedId = (id == -1) ? nextBookId++ : id;
     Book* newBook = new Book(assignedId, title, author);
     if (!head) {
@@ -32,10 +32,11 @@ void Bookshelf::addBook(const string& title, const string& author, int id) {
         temp->next = newBook;
     }
     if (assignedId >= nextBookId) nextBookId = assignedId + 1;
-    cout << "✅ Book added to '" << name << "' with id = " << assignedId << ".\n";
+    if (!silent)
+        cout << "\033[1;32m✔ Book added to '\033[1;36m" << name << "\033[1;32m' with id = " << assignedId << ".\033[0m\n";
 }
 
-void Bookshelf::addBookWithGenres(const string& title, const string& author, const vector<string>& genres, int id) {
+void Bookshelf::addBookWithGenres(const string& title, const string& author, const vector<string>& genres, int id, bool silent) {
     int assignedId = (id == -1) ? nextBookId++ : id;
     Book* newBook = new Book(assignedId, title, author);
 
@@ -55,7 +56,8 @@ void Bookshelf::addBookWithGenres(const string& title, const string& author, con
     bookGraph.addBook(newBook);
 
     if (assignedId >= nextBookId) nextBookId = assignedId + 1;
-    cout << "✅ Book added to '" << name << "' with id = " << assignedId << ".\n";
+    if (!silent)
+        cout << "\033[1;32m✔ Book added to '\033[1;36m" << name << "\033[1;32m' with id = " << assignedId << ".\033[0m\n";
 }
 
 vector<Book*> Bookshelf::getRecommendations(int bookId, int limit) {
@@ -65,20 +67,20 @@ vector<Book*> Bookshelf::getRecommendations(int bookId, int limit) {
 }
 
 void Bookshelf::displayBooks() const {
-    cout << "\n📚 Books in '" << name << "' shelf:\n";
+    cout << "\n\033[1;36m📚 Books in '\033[1;34m" << name << "\033[1;36m' shelf:\033[0m\n";
     if (!head) {
-        cout << "⚠️  No books in this shelf.\n";
+        cout << "\033[1;33m⚠️  No books in this shelf.\033[0m\n";
         return;
     }
     Book* temp = head;
     while (temp) {
-        cout << "🔸 ID: " << temp->getId()
-            << ", Title: " << temp->getTitle()
-            << ", Author: " << temp->getAuthor();
+        cout << "\033[1;35m• ID: \033[1;37m" << temp->getId()
+            << "\033[0m, \033[1;34mTitle: \033[0m" << temp->getTitle()
+            << "\033[0m, \033[1;36mAuthor: \033[0m" << temp->getAuthor();
         // Show genres
         const auto& genres = temp->getGenres();
         if (!genres.empty()) {
-            cout << ", Genres: ";
+            cout << "\033[0m, \033[1;33mGenres: \033[0m";
             for (size_t i = 0; i < genres.size(); ++i) {
                 cout << genres[i];
                 if (i < genres.size() - 1) cout << ", ";
@@ -88,9 +90,9 @@ void Bookshelf::displayBooks() const {
         extern Library* gLibrary;
         if (gLibrary) {
             int count = gLibrary->getMostBorrowedTree().getCount(temp->getId());
-            cout << ", Times Borrowed: " << count;
+            cout << "\033[0m, \033[1;31mTimes Borrowed: \033[1;37m" << count;
         }
-        cout << endl;
+        cout << "\033[0m" << endl;
         temp = temp->next;
     }
 }
@@ -99,14 +101,14 @@ void Bookshelf::searchBook(int id) const {
     Book* temp = head;
     while (temp) {
         if (temp->getId() == id) {
-            cout << "\n🔍 Found in '" << name << "' shelf:\n";
-            cout << "ID: " << temp->getId()
-                << ", Title: " << temp->getTitle()
-                << ", Author: " << temp->getAuthor();
+            cout << "\n\033[1;36m🔍 Found in '\033[1;34m" << name << "\033[1;36m' shelf:\033[0m\n";
+            cout << "\033[1;35mID: \033[1;37m" << temp->getId()
+                << "\033[0m, \033[1;34mTitle: \033[0m" << temp->getTitle()
+                << "\033[0m, \033[1;36mAuthor: \033[0m" << temp->getAuthor();
             // Show genres
             const auto& genres = temp->getGenres();
             if (!genres.empty()) {
-                cout << ", Genres: ";
+                cout << "\033[0m, \033[1;33mGenres: \033[0m";
                 for (size_t i = 0; i < genres.size(); ++i) {
                     cout << genres[i];
                     if (i < genres.size() - 1) cout << ", ";
@@ -116,19 +118,19 @@ void Bookshelf::searchBook(int id) const {
             extern Library* gLibrary;
             if (gLibrary) {
                 int count = gLibrary->getMostBorrowedTree().getCount(temp->getId());
-                cout << ", Times Borrowed: " << count;
+                cout << "\033[0m, \033[1;31mTimes Borrowed: \033[1;37m" << count;
             }
-            cout << endl;
+            cout << "\033[0m" << endl;
             return;
         }
         temp = temp->next;
     }
-    cout << "❌ Book with ID " << id << " not found in '" << name << "' shelf.\n";
+    cout << "\033[1;31m✖ Book with ID " << id << " not found in '\033[1;34m" << name << "\033[1;31m' shelf.\033[0m\n";
 }
 
 void Bookshelf::deleteBook(int id) {
     if (!head) {
-        cout << "⚠️  Shelf is empty.\n";
+        cout << "\033[1;33m⚠️  Shelf is empty.\033[0m\n";
         return;
     }
 
@@ -136,7 +138,7 @@ void Bookshelf::deleteBook(int id) {
         Book* toDelete = head;
         head = head->next;
         delete toDelete;
-        cout << "🗑️  Book deleted from '" << name << "' shelf.\n";
+        cout << "\033[1;31m🗑️  Book deleted from '\033[1;34m" << name << "\033[1;31m' shelf.\033[0m\n";
         return;
     }
 
@@ -148,10 +150,10 @@ void Bookshelf::deleteBook(int id) {
         Book* toDelete = temp->next;
         temp->next = temp->next->next;
         delete toDelete;
-        cout << "🗑️  Book deleted from '" << name << "' shelf.\n";
+        cout << "\033[1;31m🗑️  Book deleted from '\033[1;34m" << name << "\033[1;31m' shelf.\033[0m\n";
     }
     else {
-        cout << "❌ Book with ID " << id << " not found.\n";
+        cout << "\033[1;31m✖ Book with ID " << id << " not found.\033[0m\n";
     }
 }
 

@@ -14,7 +14,7 @@ User::User(const string& uname, const string& pass, bool admin)
 void User::borrowBook(Bookshelf* shelf, int bookId) {
     for (const auto& b : borrowedBooks) {
         if (b.first == shelf->getName() && b.second == bookId) {
-            cout << "⚠️  You already borrowed this book.\n";
+            cout << "\033[1;33m⚠️  You already borrowed this book.\033[0m\n";
             return;
         }
     }
@@ -24,7 +24,7 @@ void User::borrowBook(Bookshelf* shelf, int bookId) {
     if (gLibrary) {
         gLibrary->getMostBorrowedTree().increment(bookId);
     }
-    cout << "✅ Book borrowed successfully.\n";
+    cout << "\033[1;32m✔ Book borrowed successfully.\033[0m\n";
 }
 
 void User::returnBook(Bookshelf* shelf, int bookId) {
@@ -32,21 +32,21 @@ void User::returnBook(Bookshelf* shelf, int bookId) {
     while (it != borrowedBooks.end()) {
         if (it->first == shelf->getName() && it->second == bookId) {
             borrowedBooks.erase(it);
-            cout << "✅ '" << shelf->getBookById(bookId)->getTitle() << "' returned to '" << shelf->getName() << "'\n";
+            cout << "\033[1;32m✔ '\033[1;34m" << shelf->getBookById(bookId)->getTitle() << "\033[1;32m' returned to '\033[1;36m" << shelf->getName() << "\033[1;32m'\033[0m\n";
             return;
         }
         ++it;
     }
-    cout << "⚠️  Book not found in your borrowed list.\n";
+    cout << "\033[1;33m⚠️  Book not found in your borrowed list.\033[0m\n";
 }
 
 void User::viewBorrowedBooks() const {
     if (borrowedBooks.empty()) {
-        cout << "📭 No books currently borrowed.\n";
+        cout << "\033[1;33m📭 No books currently borrowed.\033[0m\n";
         return;
     }
-    cout << "\n📖 Your Borrowed Books:\n";
+    cout << "\n\033[1;36m📖 Your Borrowed Books:\033[0m\n";
     for (const auto& b : borrowedBooks) {
-        cout << "📚 " << b.first << " - Book ID: " << b.second << endl;
+        cout << "\033[1;34m📚 " << b.first << " - Book ID: " << b.second << "\033[0m" << endl;
     }
 }

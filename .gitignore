@@ -1,0 +1,31 @@
+# Build artifacts
+*.exe
+*.obj
+*.o
+*.out
+*.a
+*.lib
+*.dll
+*.so
+*.pdb
+*.txt
+
+# IDE/project files
+.vscode/
+*.sln
+*.vcxproj*
+*.user
+*.opensdf
+*.sdf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# User data
+library.txt
+users.txt
+
+# Backup files
+*~
+*.bak

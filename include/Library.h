@@ -10,7 +10,7 @@ class Library {
 private:
     int nextBookShelfId;
     std::unordered_map<std::string, Bookshelf*> bookshelves;
-    const std::string filename = "library.txt";
+    const std::string filename = "data/library.txt";
     AVLTree mostBorrowedTree;
 
 public:

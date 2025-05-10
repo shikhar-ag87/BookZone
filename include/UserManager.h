@@ -7,7 +7,7 @@
 class UserManager {
 private:
     std::unordered_map<std::string, User*> users;
-    const std::string filename = "users.txt";
+    const std::string filename = "data/users.txt";
 
 public:
     void saveToFile();

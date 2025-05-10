@@ -1,31 +1,33 @@
 # Build artifacts
-*.exe
-*.obj
 *.o
+*.obj
+*.exe
 *.out
 *.a
 *.lib
 *.dll
 *.so
-*.pdb
+*.dylib
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# User data and logs
+*.log
+*.tmp
 *.txt
 
-# IDE/project files
+# IDE/editor files
 .vscode/
-*.sln
-*.vcxproj*
-*.user
-*.opensdf
-*.sdf
+.idea/
+*.sublime-workspace
+*.sublime-project
 
-# OS files
+# OS-specific files
 .DS_Store
 Thumbs.db
 
-# User data
-library.txt
-users.txt
-
-# Backup files
-*~
-*.bak
+# Project data files (optional, comment out if you want to keep them in git)
+# users.txt
+# library.txt

@@ -1,19 +1,15 @@
 #include <iostream>
-
+#include <limits>
+#include <algorithm> // for std::transform
 #include "promptBookShelf.h"
 
 using namespace std;
 
-// Helper function for autocompletion
-void showBookshelfAutocomplete(Library* library, const std::string& partial) {
-    bool found = false;
-    for (const auto& pair : library->getBookshelves()) {
-        if (pair.first.find(partial) == 0) {
-            std::cout << "  " << pair.first << std::endl;
-            found = true;
-        }
-    }
-    if (!found) std::cout << "  (no matches)\n";
+// Helper function to convert a string to lowercase
+static std::string toLower(const std::string& s) {
+    std::string out = s;
+    std::transform(out.begin(), out.end(), out.begin(), ::tolower);
+    return out;
 }
 
 void promptBookShelfAdmin(Library* library, User** currentUser, int* choice) {
@@ -27,18 +23,13 @@ void promptBookShelfAdmin(Library* library, User** currentUser, int* choice) {
 
     cout << "Enter your choice: ";
     cin >> *choice;
-    cin.ignore();  // clear newline from input buffer
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // clear input buffer
 
     switch (*choice) {
     case 1:
         while (true) {
-            cout << "Enter Bookshelf Name (or type 'cancel' to abort, or press TAB for suggestions): ";
+            cout << "Enter Bookshelf Name (or type 'cancel' to abort): ";
             getline(cin, shelfName);
-            if (shelfName == "\t") {
-                cout << "\033[36mSuggestions:\033[0m\n";
-                showBookshelfAutocomplete(library, "");
-                continue;
-            }
             if (shelfName == "cancel" || shelfName == "CANCEL" || shelfName == "Cancel") {
                 cout << "\033[33mOperation cancelled.\033[0m\n";
                 break;
@@ -50,13 +41,8 @@ void promptBookShelfAdmin(Library* library, User** currentUser, int* choice) {
 
     case 2:
         while (true) {
-            cout << "Enter Bookshelf Name to delete (or type 'cancel' to abort, or press TAB for suggestions): ";
+            cout << "Enter Bookshelf Name to delete (or type 'cancel' to abort): ";
             getline(cin, shelfName);
-            if (shelfName == "\t") {
-                cout << "\033[36mSuggestions:\033[0m\n";
-                showBookshelfAutocomplete(library, "");
-                continue;
-            }
             if (shelfName == "cancel" || shelfName == "CANCEL" || shelfName == "Cancel") {
                 cout << "\033[33mOperation cancelled.\033[0m\n";
                 break;
@@ -72,13 +58,8 @@ void promptBookShelfAdmin(Library* library, User** currentUser, int* choice) {
 
     case 4: {
         while (true) {
-            cout << "Enter Bookshelf Name (or type 'cancel' to abort, or press TAB for suggestions): ";
+            cout << "Enter Bookshelf Name (or type 'cancel' to abort): ";
             getline(cin, shelfName);
-            if (shelfName == "\t") {
-                cout << "\033[36mSuggestions:\033[0m\n";
-                showBookshelfAutocomplete(library, "");
-                continue;
-            }
             if (shelfName == "cancel" || shelfName == "CANCEL" || shelfName == "Cancel") {
                 cout << "\033[33mOperation cancelled.\033[0m\n";
                 break;
@@ -118,7 +99,7 @@ void promptBookShelf(Library* library, User** currentUser, int* choice) {
 
     cout << "Enter your choice: ";
     cin >> *choice;
-    cin.ignore();  // clear newline from input buffer
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // clear input buffer
 
     switch (*choice) {
     case 1:
@@ -127,13 +108,8 @@ void promptBookShelf(Library* library, User** currentUser, int* choice) {
 
     case 2: {
         while (true) {
-            cout << "Enter Bookshelf Name (or type 'cancel' to abort, or press TAB for suggestions): ";
+            cout << "Enter Bookshelf Name (or type 'cancel' to abort): ";
             getline(cin, shelfName);
-            if (shelfName == "\t") {
-                cout << "\033[36mSuggestions:\033[0m\n";
-                showBookshelfAutocomplete(library, "");
-                continue;
-            }
             if (shelfName == "cancel" || shelfName == "CANCEL" || shelfName == "Cancel") {
                 cout << "\033[33mOperation cancelled.\033[0m\n";
                 break;

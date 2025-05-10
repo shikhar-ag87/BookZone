@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
+#include <algorithm>
 #include "Library.h"
 #include "AVLTree.h"
 
@@ -22,7 +23,8 @@ void Library::saveToFile() {
     if (bookshelves.empty()) return;
     ofstream outFile(filename);
     for (const auto& pair : bookshelves) {
-        outFile << "#Bookshelf," << pair.first << "\n";
+        // Save the original shelf name, not the key
+        outFile << "#Bookshelf," << pair.second->getName() << "\n";
         Book* current = pair.second->getHead();
         while (current != nullptr) {
             outFile << current->getId() << ","
@@ -41,16 +43,33 @@ void Library::saveToFile() {
     outFile.close();
 }
 
+// Helper function to trim whitespace from both ends of a string
+static inline std::string trim(const std::string& s) {
+    size_t start = s.find_first_not_of(" \t\r\n");
+    size_t end = s.find_last_not_of(" \t\r\n");
+    if (start == std::string::npos) return "";
+    return s.substr(start, end - start + 1);
+}
+
 void Library::loadFromFile() {
     ifstream inFile(filename);
     string line;
     Bookshelf* currentShelf = nullptr;
 
+    auto toLower = [](const std::string& s) {
+        std::string out = s;
+        std::transform(out.begin(), out.end(), out.begin(), ::tolower);
+        return out;
+        };
+
     while (getline(inFile, line)) {
+        line = trim(line);
+        if (line.empty()) continue;
         if (line.rfind("#Bookshelf,", 0) == 0) {
-            string shelfName = line.substr(11);  // after "#Bookshelf,"
+            string shelfName = trim(line.substr(11));  // after "#Bookshelf,"
             addBookshelf(shelfName, true);
-            currentShelf = bookshelves[shelfName];
+            std::string key = toLower(shelfName);
+            currentShelf = bookshelves.count(key) ? bookshelves[key] : nullptr;
         }
         else if (currentShelf) {
             stringstream ss(line);
@@ -60,50 +79,80 @@ void Library::loadFromFile() {
             getline(ss, author, ',');
             getline(ss, genresStr);
 
+            idStr = trim(idStr);
+            title = trim(title);
+            author = trim(author);
+            genresStr = trim(genresStr);
+
             // Split genres by |
             vector<string> genres;
             stringstream genreSS(genresStr);
             string genre;
             while (getline(genreSS, genre, '|')) {
+                genre = trim(genre);
                 if (!genre.empty()) {
                     genres.push_back(genre);
                 }
             }
 
-            int id = stoi(idStr);
-            currentShelf->addBookWithGenres(title, author, genres, id, true);
+            if (!idStr.empty() && !title.empty() && !author.empty()) {
+                int id = stoi(idStr);
+                currentShelf->addBookWithGenres(title, author, genres, id, true);
+            }
         }
+        // else: ignore lines if currentShelf is nullptr (malformed file)
     }
 
     inFile.close();
 }
 
 void Library::addBookshelf(const string& name, bool silent) {
-    if (bookshelves.count(name)) {
+    auto toLower = [](const std::string& s) {
+        std::string out = s;
+        std::transform(out.begin(), out.end(), out.begin(), ::tolower);
+        return out;
+        };
+    std::string key = toLower(name);
+    if (bookshelves.count(key)) {
         if (!silent)
             cout << "\033[1;33m⚠️  Bookshelf already exists.\033[0m\n";
         return;
     }
     Bookshelf* bookShelf = new Bookshelf(nextBookShelfId++, name);
-    bookshelves[name] = bookShelf;
+    bookshelves[key] = bookShelf;
     if (!silent)
         cout << "\033[1;32m✔ Bookshelf '\033[1;36m" << name << "\033[1;32m' added with id = " << bookShelf->getId() << ".\033[0m\n";
 }
 
 void Library::removeBookshelf(const string& name) {
-    auto it = bookshelves.find(name);
+    auto toLower = [](const std::string& s) {
+        std::string out = s;
+        std::transform(out.begin(), out.end(), out.begin(), ::tolower);
+        return out;
+        };
+    std::string key = toLower(name);
+    auto it = bookshelves.find(key);
     if (it == bookshelves.end()) {
         cout << "\033[1;31m✖ Bookshelf not found.\033[0m\n";
         return;
     }
     delete it->second;
-    bookshelves.erase(name);
+    bookshelves.erase(key);
     cout << "\033[1;31m✔ Bookshelf '\033[1;36m" << name << "\033[1;31m' Deleted.\033[0m\n";
 }
 
 Bookshelf* Library::getBookshelf(const string& name) {
-    auto it = bookshelves.find(name);
-    return (it != bookshelves.end()) ? it->second : nullptr;
+    auto toLower = [](const std::string& s) {
+        std::string out = s;
+        std::transform(out.begin(), out.end(), out.begin(), ::tolower);
+        return out;
+        };
+    std::string key = toLower(name);
+    auto it = bookshelves.find(key);
+    if (it != bookshelves.end()) {
+        return it->second;
+    }
+    return nullptr;
 }
 
 void Library::displayBookshelves() const {
@@ -113,7 +162,7 @@ void Library::displayBookshelves() const {
     }
     cout << "\n\033[1;36m📚 Available Bookshelves:\033[0m\n";
     for (const auto& pair : bookshelves) {
-        cout << "\033[1;34m🔹 " << pair.first << "\033[0m" << endl;
+        cout << "\033[1;34m🔹 " << pair.second->getName() << "\033[0m" << endl;
     }
 }
 

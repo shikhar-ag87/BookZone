@@ -13,6 +13,7 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 
+
 # User data and logs
 *.log
 *.tmp
@@ -29,5 +30,7 @@ Makefile
 Thumbs.db
 
 # Project data files (optional, comment out if you want to keep them in git)
-# users.txt
-# library.txt
+bin/
+data/
+PROBLEM.md
+VIDEO_SCRIPT.md

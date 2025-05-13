@@ -14,12 +14,14 @@ static std::string toLower(const std::string& s) {
 
 void promptBookShelfAdmin(Library* library, User** currentUser, int* choice) {
     string shelfName;
+    int showTopN;
     cout << "\n\033[36m===== 📖 Library Menu =====\033[0m\n";
     cout << "1. Add Bookshelf\n";
     cout << "2. Delete Bookshelf\n";
     cout << "3. Display All Bookshelves\n";
     cout << "4. Select Bookshelf\n";
-    cout << "5. Exit\n";
+    cout << "5. N most borrowed books\n";
+    cout << "6. Exit\n";
 
     cout << "Enter your choice: ";
     cin >> *choice;
@@ -79,8 +81,13 @@ void promptBookShelfAdmin(Library* library, User** currentUser, int* choice) {
         }
         break;
     }
-
     case 5:
+        int n;
+        cout << "Enter N: ";
+        cin >> n;
+        library->displayTopBorrowedBooks(n);
+        break;
+    case 6:
         (*currentUser) = nullptr;
         break;
 
@@ -91,11 +98,13 @@ void promptBookShelfAdmin(Library* library, User** currentUser, int* choice) {
 
 void promptBookShelf(Library* library, User** currentUser, int* choice) {
     string shelfName;
+    int showTopN;
     int id;
     cout << "\n\033[36m===== 📖 Library Menu =====\033[0m\n";
     cout << "1. Display All Bookshelves\n";
     cout << "2. Select Bookshelf\n";
-    cout << "3. Exit\n";
+    cout << "3. N most borrowed books\n";
+    cout << "4. Exit\n";
 
     cout << "Enter your choice: ";
     cin >> *choice;
@@ -129,8 +138,14 @@ void promptBookShelf(Library* library, User** currentUser, int* choice) {
         }
         break;
     }
-
     case 3:
+        int n;
+        cout << "Enter N: ";
+        cin >> n;
+        library->displayTopBorrowedBooks(n);
+        break;
+
+    case 4:
         (*currentUser) = nullptr;
         break;
 

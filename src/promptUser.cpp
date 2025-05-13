@@ -21,6 +21,8 @@ int promptUser(Library* library, UserManager* userManager, User** currentUser) {
     case 2:
         *currentUser = userManager->loginUser();
         break;
+    case 5:
+        break;
     case 3:
         // *currentUser = nullptr;
         cout << "\033[35m👋 Exiting program.\033[0m\n";
@@ -30,7 +32,9 @@ int promptUser(Library* library, UserManager* userManager, User** currentUser) {
         cout << "\033[31m❗ Invalid choice.\033[0m\n";
     }
 
-
+    // Prompt for top N most borrowed books after login/registration
+    if (*currentUser) {
+    }
 
     if (*currentUser) {
         bool isAdmin = (*currentUser)->isAdmin;

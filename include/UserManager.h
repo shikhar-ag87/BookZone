@@ -3,11 +3,12 @@
 
 #include <unordered_map>
 #include "User.h"
+#include "Database.h"
 
 class UserManager {
 private:
     std::unordered_map<std::string, User*> users;
-    const std::string filename = "data/users.txt";
+    Database* database;
 
 public:
     void saveToFile();
@@ -16,6 +17,7 @@ public:
     ~UserManager();
     void registerUser();
     User* loginUser();
+    Database* getDatabase() { return database; }
 };
 
 #endif

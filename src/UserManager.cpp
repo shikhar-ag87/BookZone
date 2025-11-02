@@ -7,60 +7,38 @@
 using namespace std;
 
 void UserManager::saveToFile() {
-    ofstream outFile(filename);
     for (const auto& pair : users) {
         User* u = pair.second;
-        outFile << u->username << "," << u->password << "," << u->isAdmin << "|";
+        database->saveUser(u->username, u->password, u->isAdmin);
+
+        // Save borrowed books
         for (const auto& book : u->borrowedBooks) {
-            outFile << book.first << ":" << book.second << ";";
+            database->saveBorrowedBook(u->username, book.first, book.second);
         }
-        outFile << "\n";
     }
 }
 
 void UserManager::loadFromFile() {
-    ifstream inFile(filename);
-    string line;
+    auto usersData = database->loadUsers();
 
-    while (getline(inFile, line)) {
-        size_t sep = line.find('|');
-        string userInfo = line.substr(0, sep);
-        string borrowData = (sep != string::npos) ? line.substr(sep + 1) : "";
+    for (const auto& userData : usersData) {
+        string username = get<0>(userData);
+        string password = get<1>(userData);
+        bool isAdmin = get<2>(userData);
 
-        stringstream userSS(userInfo);
-        string username, password, isAdminStr;
-        getline(userSS, username, ',');
-        getline(userSS, password, ',');
-        getline(userSS, isAdminStr, ',');
-
-        bool isAdmin = (isAdminStr == "1");
         User* u = new User(username, password, isAdmin);
 
-        if (!borrowData.empty()) {
-            stringstream borrowSS(borrowData);
-            string entry;
-            while (getline(borrowSS, entry, ';')) {
-                size_t colon = entry.find(':');
-                if (colon != string::npos) {
-                    string shelf = entry.substr(0, colon);
-                    int bookId = stoi(entry.substr(colon + 1));
-                    u->borrowedBooks.emplace_back(shelf, bookId);
-                    // Increment borrow count in AVL tree for loaded borrowed books
-                    extern Library* gLibrary;
-                    if (gLibrary) {
-                        gLibrary->getMostBorrowedTree().increment(bookId);
-                    }
-                }
-            }
+        // Load borrowed books
+        auto borrowedBooks = database->loadBorrowedBooks(username);
+        for (const auto& book : borrowedBooks) {
+            u->borrowedBooks.emplace_back(book.first, book.second);
         }
 
         users[username] = u;
     }
-
-    inFile.close();
 }
 
-UserManager::UserManager() {
+UserManager::UserManager() : database(new Database()) {
     loadFromFile();
 }
 
@@ -68,6 +46,7 @@ UserManager::~UserManager() {
     saveToFile();
     for (auto& pair : users)
         delete pair.second;
+    delete database;
 }
 
 void UserManager::registerUser() {
@@ -114,6 +93,7 @@ void UserManager::registerUser() {
     }
 
     users[username] = new User(username, password, role);
+    database->saveUser(username, password, role);
     cout << "\033[1;32m✔ User registered successfully.\033[0m\n";
 }
 

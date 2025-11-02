@@ -1,0 +1,74 @@
+[
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/AVLTree.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/AVLTree.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/AVLTree.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/AVLTree.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/Book.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/Book.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/Book.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/Book.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/BookGraph.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/BookGraph.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/BookGraph.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/BookGraph.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/BookShelf.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/BookShelf.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/BookShelf.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/BookShelf.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/Database.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/Database.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/Database.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/Database.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/Library.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/Library.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/Library.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/Library.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/User.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/User.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/User.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/User.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/UserManager.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/UserManager.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/UserManager.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/UserManager.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/main.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/main.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/main.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/main.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/promptBook.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/promptBook.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/promptBook.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/promptBook.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/promptBookShelf.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/promptBookShelf.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/promptBookShelf.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/promptBookShelf.cpp.o"
+},
+{
+  "directory": "/mnt/d/dev/classwork/data_struct/project/build",
+  "command": "/usr/bin/g++  -I/mnt/d/dev/classwork/data_struct/project/include -g -std=gnu++17 -o CMakeFiles/BookZone.dir/src/promptUser.cpp.o -c /mnt/d/dev/classwork/data_struct/project/src/promptUser.cpp",
+  "file": "/mnt/d/dev/classwork/data_struct/project/src/promptUser.cpp",
+  "output": "CMakeFiles/BookZone.dir/src/promptUser.cpp.o"
+}
+]

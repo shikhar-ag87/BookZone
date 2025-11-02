@@ -5,13 +5,14 @@
 #include <string>
 #include "BookShelf.h"
 #include "AVLTree.h"
+#include "Database.h"
 
 class Library {
 private:
     int nextBookShelfId;
     std::unordered_map<std::string, Bookshelf*> bookshelves;
-    const std::string filename = "data/library.txt";
     AVLTree mostBorrowedTree;
+    Database* database;
 
 public:
     Library();
@@ -25,6 +26,7 @@ public:
     AVLTree& getMostBorrowedTree();
     void displayTopBorrowedBooks(int N);
     const std::unordered_map<std::string, Bookshelf*>& getBookshelves() const { return bookshelves; }
+    Database* getDatabase() { return database; }
 };
 
 #endif

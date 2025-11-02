@@ -6,10 +6,11 @@
 #include <algorithm>
 #include "Library.h"
 #include "AVLTree.h"
+#include "Database.h"
 
 using namespace std;
 
-Library::Library() : nextBookShelfId(0) {
+Library::Library() : nextBookShelfId(0), database(new Database()) {
     loadFromFile();
 }
 
@@ -17,30 +18,30 @@ Library::~Library() {
     saveToFile();
     for (auto& pair : bookshelves)
         delete pair.second;
+    delete database;
 }
 
 void Library::saveToFile() {
     if (bookshelves.empty()) return;
-    ofstream outFile(filename);
+
     for (const auto& pair : bookshelves) {
-        // Save the original shelf name, not the key
-        outFile << "#Bookshelf," << pair.second->getName() << "\n";
-        Book* current = pair.second->getHead();
+        Bookshelf* shelf = pair.second;
+        database->saveBookshelf(shelf->getName(), shelf->getId());
+
+        Book* current = shelf->getHead();
         while (current != nullptr) {
-            outFile << current->getId() << ","
-                << current->getTitle() << ","
-                << current->getAuthor() << ",";
-            // Save genres with | separator
-            const auto& genres = current->getGenres();
-            for (size_t i = 0; i < genres.size(); ++i) {
-                outFile << genres[i];
-                if (i < genres.size() - 1) outFile << "|";
-            }
-            outFile << "\n";
+            database->saveBook(current->getId(), shelf->getName(),
+                current->getTitle(), current->getAuthor(),
+                current->getGenres());
             current = current->next;
         }
     }
-    outFile.close();
+
+    // Save borrow counts
+    auto counts = mostBorrowedTree.getAll();
+    for (const auto& pair : counts) {
+        database->saveBorrowCount(pair.first, pair.second);
+    }
 }
 
 // Helper function to trim whitespace from both ends of a string
@@ -52,39 +53,32 @@ static inline std::string trim(const std::string& s) {
 }
 
 void Library::loadFromFile() {
-    ifstream inFile(filename);
-    string line;
-    Bookshelf* currentShelf = nullptr;
-
     auto toLower = [](const std::string& s) {
         std::string out = s;
         std::transform(out.begin(), out.end(), out.begin(), ::tolower);
         return out;
         };
 
-    while (getline(inFile, line)) {
-        line = trim(line);
-        if (line.empty()) continue;
-        if (line.rfind("#Bookshelf,", 0) == 0) {
-            string shelfName = trim(line.substr(11));  // after "#Bookshelf,"
-            addBookshelf(shelfName, true);
-            std::string key = toLower(shelfName);
-            currentShelf = bookshelves.count(key) ? bookshelves[key] : nullptr;
+    // Load bookshelves
+    auto shelves = database->loadBookshelves();
+    for (const auto& shelf : shelves) {
+        string name = shelf.second;
+        string key = toLower(name);
+        Bookshelf* bookShelf = new Bookshelf(shelf.first, name);
+        bookshelves[key] = bookShelf;
+        if (shelf.first >= nextBookShelfId) {
+            nextBookShelfId = shelf.first + 1;
         }
-        else if (currentShelf) {
-            stringstream ss(line);
-            string idStr, title, author, genresStr;
-            getline(ss, idStr, ',');
-            getline(ss, title, ',');
-            getline(ss, author, ',');
-            getline(ss, genresStr);
 
-            idStr = trim(idStr);
-            title = trim(title);
-            author = trim(author);
-            genresStr = trim(genresStr);
+        // Load books for this shelf
+        auto books = database->loadBooks(name);
+        for (const auto& bookData : books) {
+            int id = get<0>(bookData);
+            string title = get<1>(bookData);
+            string author = get<2>(bookData);
+            string genresStr = get<3>(bookData);
 
-            // Split genres by |
+            // Parse genres
             vector<string> genres;
             stringstream genreSS(genresStr);
             string genre;
@@ -95,15 +89,17 @@ void Library::loadFromFile() {
                 }
             }
 
-            if (!idStr.empty() && !title.empty() && !author.empty()) {
-                int id = stoi(idStr);
-                currentShelf->addBookWithGenres(title, author, genres, id, true);
-            }
+            bookShelf->addBookWithGenres(title, author, genres, id, true);
         }
-        // else: ignore lines if currentShelf is nullptr (malformed file)
     }
 
-    inFile.close();
+    // Load borrow counts
+    auto counts = database->loadAllBorrowCounts();
+    for (const auto& pair : counts) {
+        for (int i = 0; i < pair.second; ++i) {
+            mostBorrowedTree.increment(pair.first);
+        }
+    }
 }
 
 void Library::addBookshelf(const string& name, bool silent) {

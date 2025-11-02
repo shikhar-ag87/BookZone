@@ -9,7 +9,7 @@
 *.so
 *.dylib
 CMakeFiles/
-CMakeCache.txt
+# CMakeCache.txt
 cmake_install.cmake
 Makefile
 
@@ -34,3 +34,4 @@ bin/
 data/
 PROBLEM.md
 VIDEO_SCRIPT.md
+build/

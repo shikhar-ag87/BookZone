@@ -19,10 +19,14 @@ void User::borrowBook(Bookshelf* shelf, int bookId) {
         }
     }
     borrowedBooks.push_back({ shelf->getName(), bookId });
-    // Increment borrow count in the library's AVL tree
+
+    // Save to database
     extern Library* gLibrary;
     if (gLibrary) {
         gLibrary->getMostBorrowedTree().increment(bookId);
+        gLibrary->getDatabase()->saveBorrowedBook(username, shelf->getName(), bookId);
+        int count = gLibrary->getMostBorrowedTree().getCount(bookId);
+        gLibrary->getDatabase()->saveBorrowCount(bookId, count);
     }
     cout << "\033[1;32m✔ Book borrowed successfully.\033[0m\n";
 }
@@ -32,6 +36,12 @@ void User::returnBook(Bookshelf* shelf, int bookId) {
     while (it != borrowedBooks.end()) {
         if (it->first == shelf->getName() && it->second == bookId) {
             borrowedBooks.erase(it);
+
+            // Save to database
+            extern Library* gLibrary;
+            if (gLibrary) {
+                gLibrary->getDatabase()->deleteBorrowedBook(username, shelf->getName(), bookId);
+            }
             cout << "\033[1;32m✔ '\033[1;34m" << shelf->getBookById(bookId)->getTitle() << "\033[1;32m' returned to '\033[1;36m" << shelf->getName() << "\033[1;32m'\033[0m\n";
             return;
         }
